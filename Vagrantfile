@@ -9,8 +9,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = 2048
-	vb.cpus = 2
-	vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+    vb.cpus = 2
+    vb.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
   end
  
   if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*/id").empty?
@@ -20,8 +20,9 @@ Vagrant.configure(2) do |config|
       "apt-get update -qq; apt-get install -q -y --force-yes lxc-docker; "
     # Add vagrant user to the docker group
     pkg_cmd << "usermod -a -G docker vagrant; "
-	# Install fig
-	pkg_cmd << "curl -L https://github.com/docker/fig/releases/download/1.0.1/fig-`uname -s`-`uname -m` > /usr/local/bin/fig; chmod +x /usr/local/bin/fig"
+    # Install docker-compose
+    pkg_cmd << "curl -L https://github.com/docker/compose/releases/download/1.1.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose; chmod +x /usr/local/bin/docker-compose;"
+    pkg_cmd << "echo alias fig=\"docker-compose\" >> /home/vagrant/.bash_aliases"
 	
     config.vm.provision :shell, :inline => pkg_cmd
   end
